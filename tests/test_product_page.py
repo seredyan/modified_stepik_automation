@@ -58,7 +58,7 @@ def test_guest_cant_see_product_in_basket_opened_from_product_page(browser, prod
 
 
 
-@pytest.mark.skip ### failure before locators are present
+@pytest.mark.skip ### failure test before locators are present (unknown)
 @pytest.mark.promo
 def test_guest_can_add_product_to_basket_promo(product_page_promo):
     product_page_promo.add_product_to_basket()
