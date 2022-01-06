@@ -35,13 +35,17 @@ def browser(request):
     browser_param = request.config.getoption("--browser")
     user_language = request.config.getoption(
         "--language")  # try test_fixture3.py for example to use  #stepik_3.6 step#8
+    headless = request.config.getoption("--headless")
     if browser_param == "chrome":
         options = Options()
         options.add_experimental_option('prefs', {'intl.accept_languages': user_language})
+        if headless: options.headless = True
         driver = webdriver.Chrome()
     elif browser_param == "firefox":
+        options = Options()
         fp = webdriver.FirefoxProfile()
         fp.set_preference("intl.accept_languages", user_language)
+        if headless: options.headless = True
         driver = webdriver.Firefox(firefox_profile=fp)
     elif browser_param == "safari":
         driver = webdriver.Safari()
