@@ -34,21 +34,23 @@ def config(request):
 def browser(request):
     browser_param = request.config.getoption("--browser")
     user_language = request.config.getoption(
-        "--language")  # try test_fixture3.py for example to use  #stepik_3.6 step#8
+        "--language")  
     headless = request.config.getoption("--headless")
     if browser_param == "chrome":
         options = Options()
         options.add_experimental_option('prefs', {'intl.accept_languages': user_language})
         if headless: options.headless = True
-        driver = webdriver.Chrome()
+        driver = webdriver.Chrome(options=options)
     elif browser_param == "firefox":
-        options = Options()
+        options = webdriver.FirefoxOptions()
         fp = webdriver.FirefoxProfile()
         fp.set_preference("intl.accept_languages", user_language)
         if headless: options.headless = True
-        driver = webdriver.Firefox(firefox_profile=fp)
+        driver = webdriver.Firefox(firefox_profile=fp, options=options)
     elif browser_param == "safari":
         driver = webdriver.Safari()
+    elif browser_param == "edge":
+        driver = webdriver.Edge()
     else:
         raise Exception(f"{request.param} is not supported!")
 
@@ -57,10 +59,6 @@ def browser(request):
     # driver.get(request.config.getoption("--url"))
     return driver
 
-# @pytest.fixture
-# def base_url(request):
-#     web_config = load_config(request.config.getoption("--target"))
-#     return web_config['web']['baseUrl']
 
 
 def pytest_addoption(parser):
