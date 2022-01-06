@@ -34,7 +34,7 @@ def config(request):
 def browser(request):
     browser_param = request.config.getoption("--browser")
     user_language = request.config.getoption(
-        "--language")  
+        "--language")
     headless = request.config.getoption("--headless")
     if browser_param == "chrome":
         options = Options()

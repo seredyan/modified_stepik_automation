@@ -56,10 +56,22 @@ def test_guest_cant_see_product_in_basket_opened_from_product_page(browser, prod
     basket_page.should_be_empty_basket_message_present()
 
 
-
-
-@pytest.mark.skip ### failure test before locators are present (unknown)
 @pytest.mark.promo
 def test_guest_can_add_product_to_basket_promo(product_page_promo):
     product_page_promo.add_product_to_basket()
 
+
+"""some negative tests below"""
+
+def test_guest_can_not_see_success_message(product_page):
+    product_page.should_not_be_success_message()
+
+@pytest.mark.xfail   ## 4_3 step 6
+def test_message_disappeared_after_adding_product_to_basket(product_page):
+    product_page.add_product_to_basket()
+    product_page.success_message_should_be_disappeart()
+
+@pytest.mark.xfail  ## 4_3 step 6
+def test_guest_can_nott_see_success_message_after_adding_product_to_basket(browser):
+    product_page.add_product_to_basket()
+    product_page.should_not_be_success_message()  ## not waiting a message, fails right after message presents!!!!!!!!
