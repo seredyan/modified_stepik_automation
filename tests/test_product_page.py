@@ -38,7 +38,7 @@ def product_page_promo(browser, config):
 
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def user_and_product(browser, config):
     user = User(email=random_char_email(), password=random_string())
     page = ProductPage(browser, config['product']['209'])
@@ -111,7 +111,7 @@ def test_guest_can_not_see_success_message_after_adding_product_to_basket(browse
 
 
 
-
+### auxiliary functions
 
 
 def random_string():

@@ -48,7 +48,7 @@ class LoginPage(BasePage):
 
 
     def should_be_register_form(self):
-        # assert register form is presented
+        # assert register form is present
         self.should_be_login_url()
         assert self.is_element_present(*LoginPageLocators.REGISTER_EMAIL), "Register email form is not present"
         assert self.is_element_present(*LoginPageLocators.REGISTER_PASSWORD), "Register password form is not present"
