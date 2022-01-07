@@ -3,20 +3,21 @@ import time
 
 from .base_page import BasePage
 from .locators import LoginPageLocators
+# from model.users import User
 
 
 class LoginPage(BasePage):
 
 
-    def register_new_user(self, email, password):
+    def register_new_user(self, user):
         self.go_to_login_page()
-        self.fill_sign_up_forms(email, password)
+        self.fill_sign_up_forms(user)
         self.browser.find_element(*LoginPageLocators.REGISTRATION_SUBMIT).click()
 
-    def fill_sign_up_forms(self, email, password):
-        self.change_field_value(*LoginPageLocators.REGISTER_EMAIL, email)
-        self.change_field_value(*LoginPageLocators.REGISTER_PASSWORD, password)
-        self.change_field_value(*LoginPageLocators.REGISTER__CONFIRM_PASSWORD, password)
+    def fill_sign_up_forms(self, user):
+        self.change_field_value(*LoginPageLocators.REGISTER_EMAIL, user.email)
+        self.change_field_value(*LoginPageLocators.REGISTER_PASSWORD, user.password)
+        self.change_field_value(*LoginPageLocators.REGISTER__CONFIRM_PASSWORD, user.password)
 
 
     def change_field_value(self, selector, field_name, text):
