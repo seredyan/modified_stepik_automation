@@ -3,12 +3,12 @@ import pytest
 from pages.login_page import LoginPage
 
 
-
 @pytest.fixture
 def login_page(browser, config):
-    page = LoginPage(browser, config['accounts']['login'])
+    page = LoginPage(browser, config)
+    url = page.base_url + config['accounts']['login']
     browser.delete_all_cookies()
-    page.open(page.config)
+    page.open(url)
     return page
 
 
@@ -22,6 +22,6 @@ def test_guest_can_see_register_form(login_page):
 
 def test_guest_can_sign_up(login_page, browser, config, json_users):
     new_users = json_users
-    login_page = LoginPage(browser, config)
+    login_page = LoginPage(browser, config)  ## config here == browser.current_url
     login_page.register_new_user(new_users)
     login_page.should_be_authorized_user()

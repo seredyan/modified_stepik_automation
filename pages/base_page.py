@@ -22,6 +22,7 @@ class BasePage:
 
         self.browser = browser
         self.config = config
+        self.base_url = config['web']['baseUrl']
         browser.implicitly_wait(timeout)
 
 
@@ -32,6 +33,7 @@ class BasePage:
 
     def go_to_login_page(self):
         self.browser.find_element(*BasePageLocators.LOGIN_LINK).click()
+
 
 
 

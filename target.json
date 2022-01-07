@@ -3,9 +3,13 @@
     "baseUrl": "http://selenium1py.pythonanywhere.com/"
   },
   "product": {
-    "209": "http://selenium1py.pythonanywhere.com/en-gb/catalogue/the-shellcoders-handbook_209/"
+    "209": "catalogue/the-shellcoders-handbook_209/",
+    "95": "catalogue/the-city-and-the-stars_95/"
   },
   "accounts": {
-    "login": "http://selenium1py.pythonanywhere.com/en-gb/accounts/login/"
+    "login": "accounts/login/"
+  },
+  "promo": {
+    "2019": "?promo=newYear2019"
   }
 }

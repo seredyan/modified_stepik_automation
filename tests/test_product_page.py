@@ -9,29 +9,22 @@ from pages.login_page import LoginPage
 from model.users import User
 
 
-##  option 1
 @pytest.fixture
 def product_page(browser, config):
-    page = ProductPage(browser, config['product']['209'])
+    page = ProductPage(browser, config)
+    url = page.base_url + config['product']['209']
+    # url = f"{page.base_url}catalogue/the-shellcoders-handbook_209"  ## option_2
     browser.delete_all_cookies()
-    page.open(page.config)
+    page.open(url)
     return page
-
-# ##  option 2
-# @pytest.fixture
-# def product_page(browser, config):
-#     page = ProductPage(browser, config)
-#     url = f"{config['web']['baseUrl']}catalogue/the-shellcoders-handbook_209"
-#     browser.delete_all_cookies()
-#     page.open(url)
-#     return page
 
 
 @pytest.mark.promo
 @pytest.fixture
 def product_page_promo(browser, config):
     page = ProductPage(browser, config)
-    url = f"{config['web']['baseUrl']}catalogue/the-shellcoders-handbook_209/?promo=newYear2019"
+    url = page.base_url + config['product']['209'] + config["promo"]["2019"]
+    # url = f"{page.base_url}catalogue/the-shellcoders-handbook_209/?promo=newYear2019"  # option_2
     browser.delete_all_cookies()
     page.open(url)
     return page
@@ -41,15 +34,14 @@ def product_page_promo(browser, config):
 @pytest.fixture(scope="session")
 def user_and_product(browser, config):
     user = User(email=random_char_email(), password=random_string())
-    page = ProductPage(browser, config['product']['209'])
+    page = ProductPage(browser, config)
+    url = page.base_url + config['product']['209']
     browser.delete_all_cookies()
-    page.open(page.config)
-    login_page = LoginPage(browser, config)
+    page.open(url)
+    login_page = LoginPage(browser, config)  ## config here == browser.current_url
     login_page.register_new_user(user)
     login_page.should_be_authorized_user()
     return page
-
-
 
 
 
@@ -68,9 +60,11 @@ def test_guest_can_go_to_login_page_from_product_page(product_page):
     product_page.go_to_login_page()
 
 
+
+
 def test_guest_cant_see_product_in_basket_opened_from_product_page(browser, product_page, config):
     product_page.go_to_basket()
-    basket_page = BasketPage(browser, config)
+    basket_page = BasketPage(browser, config)  ## config here == browser.current_url
     basket_page.should_not_be_checkout_button()
     basket_page.should_be_empty_basket_message_present()
 
@@ -85,8 +79,8 @@ def test_new_user_can_not_see_success_message(user_and_product, browser, config)
     user_and_product.should_not_be_success_message()
 
 def test_user_can_add_product_to_basket(user_and_product, browser, config):
-    page = ProductPage(browser, config)
-    page.open(config['product']['209'])
+    page = ProductPage(browser, config)  ## config here == browser.current_url
+    page.open(page.base_url+config['product']['209'])
     page.add_product_to_basket()
     page.should_be_authorized_user()
 
