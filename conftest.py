@@ -42,10 +42,8 @@ def browser(request):
         driver = webdriver.Chrome(options=options)
     elif browser_param == "firefox":
         options = webdriver.FirefoxOptions()
-        fp = webdriver.FirefoxProfile()
-        fp.set_preference("intl.accept_languages", user_language)
         if headless: options.headless = True
-        driver = webdriver.Firefox(firefox_profile=fp, options=options)
+        driver = webdriver.Firefox(options=options)
     elif browser_param == "safari":
         driver = webdriver.Safari()
     elif browser_param == "edge":

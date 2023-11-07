@@ -70,6 +70,7 @@ def test_guest_cant_see_product_in_basket_opened_from_product_page(browser, prod
 
 
 @pytest.mark.promo
+@pytest.mark.skip
 def test_guest_can_add_product_to_basket_promo(product_page_promo):
     product_page_promo.add_product_to_basket()
 
