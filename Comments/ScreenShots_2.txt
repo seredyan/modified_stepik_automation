@@ -1,5 +1,7 @@
 
 #### https://medium.com/@jkaluzka/taking-a-snapshot-of-the-browser-in-case-of-error-using-selenium-and-pytest-e5c1b5073843
+### https://github.com/pytest-dev/pytest/issues/230   (nicoddemus commented on Jun 2, 2016)
+
 from pathlib import Path
 import pytest
 from selenium import webdriver
