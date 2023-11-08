@@ -1,5 +1,6 @@
 import jsonpickle
 from selenium import webdriver
+from selenium.webdriver.firefox.webdriver import WebDriver
 # from pages.base_page import BasePage
 import pytest
 # import jsonpickle
@@ -7,6 +8,8 @@ import json
 import os.path
 import importlib
 from selenium.webdriver.chrome.options import Options
+from pathlib import Path
+
 # import pymysql.cursors
 
 target = None
@@ -27,10 +30,9 @@ def config(request):
     return load_config(request.config.getoption("--target"))
 
 
-
-
 @pytest.fixture(scope="session")
 def browser(request):
+    global driver
     browser_param = request.config.getoption("--browser")
     user_language = request.config.getoption(
         "--language")
@@ -57,6 +59,24 @@ def browser(request):
     return driver
 
 
+@pytest.hookimpl(hookwrapper=True)
+def pytest_exception_interact(node, call, report):
+    """
+    Overrides the original hook to save browser state
+    in form of a screenshot into the "./errors" directory
+    """
+    web_driver = None
+    for fixture_name in node.fixturenames:
+        web_driver = node.funcargs[fixture_name]
+        if isinstance(web_driver, WebDriver):
+            break
+    if not web_driver:
+       yield
+
+    _path = "./errors"
+    Path(_path).mkdir(parents=True, exist_ok=True)
+    name = "-".join(node.nodeid.split("::")[-2:])
+    web_driver.save_screenshot(f"{_path}/error_{name}.png")
 
 def pytest_addoption(parser):
     parser.addoption("--browser", action="store", default="firefox")
