@@ -1,6 +1,18 @@
 
 #### https://medium.com/@jkaluzka/taking-a-snapshot-of-the-browser-in-case-of-error-using-selenium-and-pytest-e5c1b5073843
 from pathlib import Path
+import pytest
+from selenium import webdriver
+from selenium.webdriver.chrome.webdriver import WebDriver
+
+@pytest.fixture(scope="session")
+def browser() -> WebDriver:
+    options = webdriver.FirefoxOptions()
+    options.headless = True
+    web_browser = webdriver.Firefox(options=options)
+    web_browser.get("https://tutorialsninja.com/demo/")
+    yield web_browser
+    web_browser.close()
 
 @pytest.hookimpl(hookwrapper=True)
 def pytest_exception_interact(node, call, report):
@@ -11,16 +23,23 @@ def pytest_exception_interact(node, call, report):
     web_driver = None
     for fixture_name in node.fixturenames:
         web_driver = node.funcargs[fixture_name]
-        if isinstance(web_driver, webdriver.Chrome) or isinstance(web_driver, webdriver.Firefox):
+        if isinstance(web_driver, webdriver.Firefox) or isinstance(web_driver, webdriver.Chrome):
             break
     if not web_driver:
-       yield
+        yield
 
     _path = "./errors"
     Path(_path).mkdir(parents=True, exist_ok=True)
     name = "-".join(node.nodeid.split("::")[-2:])
     web_driver.save_screenshot(f"{_path}/error_{name}.png")
 
+""This function needs to be emproved since tests running stops once any test fails.
+Next test will not be executed.
+Also, there is an error raised:
+"env/lib/python3.10/site-packages/pluggy/_result.py", line 30, in _raise_wrapfail
+INTERNALERROR>     raise RuntimeError(
+INTERNALERROR> RuntimeError: wrap_controller at 'pytest_exception_interact'
+~my_path_to_project conftest.py:61 did not yield"
 
    """In the above code, we are fiding a fixture, that would have a driver variable that can be used
    to take a snapshot of the browser. If it is not found, then we don’t do anything. Let’s be honest,
