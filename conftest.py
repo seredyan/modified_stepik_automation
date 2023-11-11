@@ -59,24 +59,24 @@ def browser(request):
     return driver
 
 
-@pytest.hookimpl(hookwrapper=True)
-def pytest_exception_interact(node, call, report):
-    """
-    Overrides the original hook to save browser state
-    in form of a screenshot into the "./errors" directory
-    """
-    web_driver = None
-    for fixture_name in node.fixturenames:
-        web_driver = node.funcargs[fixture_name]
-        if isinstance(web_driver, WebDriver):
-            break
-    if not web_driver:
-       yield
-
-    _path = "./errors"
-    Path(_path).mkdir(parents=True, exist_ok=True)
-    name = "-".join(node.nodeid.split("::")[-2:])
-    web_driver.save_screenshot(f"{_path}/error_{name}.png")
+# @pytest.hookimpl(hookwrapper=True)
+# def pytest_exception_interact(node, call, report):
+#     """
+#     Overrides the original hook to save browser state
+#     in form of a screenshot into the "./errors" directory
+#     """
+#     web_driver = None
+#     for fixture_name in node.fixturenames:
+#         web_driver = node.funcargs[fixture_name]
+#         if isinstance(web_driver, WebDriver):
+#             break
+#     if not web_driver:
+#        yield
+#
+#     _path = "./errors"
+#     Path(_path).mkdir(parents=True, exist_ok=True)
+#     name = "-".join(node.nodeid.split("::")[-2:])
+#     web_driver.save_screenshot(f"{_path}/error_{name}.png")
 
 def pytest_addoption(parser):
     parser.addoption("--browser", action="store", default="firefox")

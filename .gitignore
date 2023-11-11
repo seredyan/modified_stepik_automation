@@ -1,6 +1,10 @@
 
 # Created by https://www.toptal.com/developers/gitignore/api/windows,macos
-# Edit at https://www.toptal.com/developers/gitignore?templates=windows,macos
+
+/.pytest_cache/
+/env/
+/reports/
+
 
 ### macOS ###
 # General
@@ -58,3 +62,7 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos
+
+/allure_report/
+/errors/
+/allure_results/
