@@ -7,6 +7,7 @@
 # from pages.login_page import LoginPage
 # from pages.basket_page import BasketPage
 import time
+import allure
 
 from selenium.common.exceptions import NoSuchElementException, TimeoutException, NoAlertPresentException
 import math
@@ -25,24 +26,24 @@ class BasePage:
         self.base_url = config['web']['baseUrl']
         browser.implicitly_wait(timeout)
 
-
+    @allure.step("Go to basket")
     def go_to_basket(self):
         self.browser.find_element(*BasePageLocators.VIEW_BASKET).click()
 
 
-
+    @allure.step("Go to login page")
     def go_to_login_page(self):
         self.browser.find_element(*BasePageLocators.LOGIN_LINK).click()
 
 
 
-
+    @allure.step("Go to main page")
     def open(self, url):
         wd = self.browser
         wd.get(url)
 
 
-
+    @allure.step('Is element - {what} present')
     def is_element_present(self, how, what):
         try:
             self.browser.find_element(how, what)

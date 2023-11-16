@@ -1,5 +1,5 @@
 
-import time
+import allure
 
 from .base_page import BasePage
 from .locators import LoginPageLocators
@@ -27,11 +27,17 @@ class LoginPage(BasePage):
             self.browser.find_element(selector, field_name).send_keys(text)
 
 
-
+    @allure.step('Check login page')
     def should_be_login_page(self):  ## if we have too much pages to test we can get united some of them
-        self.should_be_login_url()
-        self.should_be_login_form()
-        self.should_be_register_form()
+        with allure.step('Check login url'):
+            self.should_be_login_url()
+        with allure.step('Check login form'):
+            self.should_be_login_form()
+        with allure.step('Check register form'):
+            self.should_be_register_form()
+        # self.should_be_login_url()
+        # self.should_be_login_form()
+        # self.should_be_register_form()
 
 
     def should_be_login_url(self):

@@ -68,12 +68,12 @@ def pytest_exception_interact(node, call, report):
     web_driver = None
     for fixture_name in node.fixturenames:
         web_driver = node.funcargs[fixture_name]
-        if isinstance(web_driver, webdriver.Firefox) or isinstance(web_driver, webdriver.Chrome):
+        if isinstance(web_driver, WebDriver):
             break
     if not web_driver:
        yield
 
-    _path = "./errors_screenshots"
+    _path = "./errors"
     Path(_path).mkdir(parents=True, exist_ok=True)
     name = "-".join(node.nodeid.split("::")[-2:])
     web_driver.save_screenshot(f"{_path}/error_{name}.png")
