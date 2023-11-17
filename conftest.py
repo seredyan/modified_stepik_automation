@@ -13,7 +13,7 @@ import os
 from datetime import datetime
 import allure
 from allure_commons.types import AttachmentType
-from slugify import slugify
+
 
 # import pymysql.cursors
 
@@ -82,7 +82,8 @@ def pytest_exception_interact(node, call, report):
 
     if driver:
         if timestamp is None:
-            timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+            timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S") ## use for Linux and MacOS
+            # timestamp = str(datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))  ## use for Windows
         _path = Path("errors") / timestamp
         if not screenshot_failure_directory_created:
             # _path = Path("errors") / timestamp  # Create a directory with the current timestamp
