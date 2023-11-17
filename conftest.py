@@ -12,8 +12,8 @@ import datetime
 import os
 from datetime import datetime
 import allure
+from allure_commons.types import AttachmentType
 from slugify import slugify
-
 
 # import pymysql.cursors
 
@@ -63,53 +63,54 @@ def browser(request):
     return driver
 
 
-# screenshot_failure_directory_created = False  # Variable to keep track of directory creation
-# timestamp = None  # Variable to keep track of the current timestamp
-# @pytest.hookimpl(hookwrapper=True)
-# def pytest_exception_interact(node, call, report):
-#     """
-#     Overrides the original hook to save browser state
-#     in the form of a screenshot into a folder with the current timestamp
-#     """
-#     global driver, screenshot_failure_directory_created, timestamp
-#     for fixture_name in node.fixturenames:
-#         driver = node.funcargs.get(fixture_name)
-#         if isinstance(driver, WebDriver):   #### from selenium.webdriver.remote.webdriver import WebDriver  # Import WebDriver
-#             break
-#     else:
-#         driver = None
-#
-#     if driver:
-#         if timestamp is None:
-#             timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-#         _path = Path("errors") / timestamp
-#         if not screenshot_failure_directory_created:
-#             # _path = Path("errors") / timestamp  # Create a directory with the current timestamp
-#             _path.mkdir(parents=True, exist_ok=True)
-#             screenshot_failure_directory_created = True
-#
-#         ## Construct the screenshot NAME including part of the path from the "tests" directory
-#         test_path_parts = node.nodeid.split("tests/")
-#         if len(test_path_parts) > 1:
-#             # test_path = test_path_parts[-1].strip("/")
-#             test_path = test_path_parts[1].replace("/", ":::")
-#         else:
-#             test_path = "unknown_path"
-#
-#         try:
-#             ## Capture the whole browser window
-#             screenshot = driver.get_screenshot_as_png()
-#             screenshot_path = _path / f"{test_path}.png"
-#             with open(screenshot_path, "wb") as f:
-#                 f.write(screenshot)
-#             # print(f"Screenshot of test failure saved successfully. Path: {screenshot_path}")
-#         except Exception as e:
-#             print(f"Failed to save screenshot of test failure. Error: {e}")
-#     else:
-#         print("No Webdriver instance found for the current test.")
-#
-#     yield
-#
+### Screenshots on failure hooks without ALLURE ###
+screenshot_failure_directory_created = False  # Variable to keep track of directory creation
+timestamp = None  # Variable to keep track of the current timestamp
+@pytest.hookimpl(hookwrapper=True)
+def pytest_exception_interact(node, call, report):
+    """
+    Overrides the original hook to save browser state
+    in the form of a screenshot into a folder with the current timestamp
+    """
+    global driver, screenshot_failure_directory_created, timestamp
+    for fixture_name in node.fixturenames:
+        driver = node.funcargs.get(fixture_name)
+        if isinstance(driver, WebDriver):   #### from selenium.webdriver.remote.webdriver import WebDriver  # Import WebDriver
+            break
+    else:
+        driver = None
+
+    if driver:
+        if timestamp is None:
+            timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        _path = Path("errors") / timestamp
+        if not screenshot_failure_directory_created:
+            # _path = Path("errors") / timestamp  # Create a directory with the current timestamp
+            _path.mkdir(parents=True, exist_ok=True)
+            screenshot_failure_directory_created = True
+
+        ## Construct the screenshot NAME including part of the path from the "tests" directory
+        test_path_parts = node.nodeid.split("tests/")
+        if len(test_path_parts) > 1:
+            # test_path = test_path_parts[-1].strip("/")
+            test_path = test_path_parts[1].replace("/", ":::")
+        else:
+            test_path = "unknown_path"
+
+        try:
+            ## Capture the whole browser window
+            screenshot = driver.get_screenshot_as_png()
+            screenshot_path = _path / f"{test_path}.png"
+            with open(screenshot_path, "wb") as f:
+                f.write(screenshot)
+            # print(f"Screenshot of test failure saved successfully. Path: {screenshot_path}")
+        except Exception as e:
+            print(f"Failed to save screenshot of test failure. Error: {e}")
+    else:
+        print("No Webdriver instance found for the current test.")
+
+    yield
+
 
 
 def pytest_addoption(parser):
@@ -142,57 +143,74 @@ def load_from_json(file):
 
 
 
-### ****** Capture screenshot on failure using allure
+### ****** Capture screenshot on failure using ALLURE ****** ###
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item):
-    pytest_html = item.config.pluginmanager.getplugin('html')
-
-    # Get the result of calling the hook method
+    # Get the result of the call to the hook method
     outcome = yield
     # Get test results from the call result
     test_result = outcome.get_result()
-    test_result.extra = []
-
-    # If the marker match one of the testing types, then mention it in the report
-    types = ["smoke", "hotlink"]
-    for type in types:
-        marker_priority = item.get_closest_marker(type)
-        if marker_priority:
-            item.config._metadata["Test Type"] = marker_priority.name
-
-            print(marker_priority)
-
-    # Get the parameters of the test method
-    if "page" not in item.funcargs:
-        return "page not in item.funcargs"
-    page = item.funcargs["page"]
 
     if test_result.when in ["setup", "call"]:
         xfail = hasattr(test_result, 'wasxfail')
         if test_result.failed or (test_result.skipped and xfail):
-            allure.attach(page.screenshot(), name='screenshot', attachment_type=allure.attachment_type.PNG)
-            allure.attach(page.content(), name='html_source', attachment_type=allure.attachment_type.HTML)
-            if item.config.option.htmlpath is not None:
-                report_dir = os.path.dirname(item.config.option.htmlpath)
-                screen_img = str(Path("images") / f"{slugify(item.nodeid)}.png")
-                capture_screenshot(report_dir, screen_img, page)
-                if screen_img:
-                    html = '<div><img src="%s" alt="screenshot" style="height:360px;" ' \
-                           'onclick="window.open(this.src)" align="right"/></div>' % screen_img
-                    test_result.extra.append(pytest_html.extras.html(html))
+            allure.attach(driver.get_screenshot_as_png(), name='screenshot', attachment_type=allure.attachment_type.PNG)
 
 
 
-def capture_screenshot(report_dir, screen_img, page):
-    """
-    To capture screenshot and save it to 'images' folder inside the specific html report directory.
-    """
-    screenshot_dir = str(Path(report_dir) / os.path.dirname(screen_img))
-    screen_img = str(Path(report_dir) / screen_img)
-    # print("screenshot_dir:"+screenshot_dir)
-    # print("screen_img:"+screen_img)
-    if not os.path.exists(screenshot_dir):
-        os.makedirs(screenshot_dir)
+#### Variant 2 below needs to be fixed!!!!
+# @pytest.hookimpl(tryfirst=True, hookwrapper=True)
+# def pytest_runtest_makereport(item):
+#     pytest_html = item.config.pluginmanager.getplugin('html')
+#
+#     # Get the result of calling the hook method
+#     outcome = yield
+#     # Get test results from the call result
+#     test_result = outcome.get_result()
+#     test_result.extra = []
+#
+#     # If the marker match one of the testing types, then mention it in the report
+#     types = ["smoke", "hotlink"]
+#     for type in types:
+#         marker_priority = item.get_closest_marker(type)
+#         if marker_priority:
+#             item.config._metadata["Test Type"] = marker_priority.name
+#
+#             print(marker_priority)
+#
+#     # Get the parameters of the test method
+#     if "driver" not in item.funcargs:
+#         return "driver not in item.funcargs"
+#     driver = item.funcargs["driver"]
+#
+#     if test_result.when in ["setup", "call"]:
+#         xfail = hasattr(test_result, 'wasxfail')
+#         if test_result.failed or (test_result.skipped and xfail):
+#             allure.attach(driver.screenshot(), name='screenshot', attachment_type=allure.attachment_type.PNG)
+#             allure.attach(driver.content(), name='html_source', attachment_type=allure.attachment_type.HTML)
+#             if item.config.option.htmlpath is not None:
+#                 report_dir = os.path.dirname(item.config.option.htmlpath)
+#                 screen_img = str(Path("images") / f"{slugify(item.nodeid)}.png")
+#                 capture_screenshot(report_dir, screen_img, driver)
+#                 if screen_img:
+#                     html = '<div><img src="%s" alt="screenshot" style="height:360px;" ' \
+#                            'onclick="window.open(this.src)" align="right"/></div>' % screen_img
+#                     test_result.extra.append(pytest_html.extras.html(html))
+#
+#
+#
+# def capture_screenshot(report_dir, screen_img, page):
+#     """
+#     To capture screenshot and save it to 'images' folder inside the specific html report directory.
+#     """
+#     screenshot_dir = str(Path(report_dir) / os.path.dirname(screen_img))
+#     screen_img = str(Path(report_dir) / screen_img)
+#     print("screenshot_dir:"+screenshot_dir)
+#     print("screen_img:"+screen_img)
+#     if not os.path.exists(screenshot_dir):
+#         os.makedirs(screenshot_dir)
+#
+#     page.screenshot(path=screen_img)
+#
 
-    page.screenshot(path=screen_img)
 

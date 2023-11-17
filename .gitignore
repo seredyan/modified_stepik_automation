@@ -6,8 +6,10 @@
 /reports/
 /allure_report/
 /errors/
+./errors/
 /allure_results/
-
+/allure_result/
+/allure_reports/
 
 ### macOS ###
 # General
