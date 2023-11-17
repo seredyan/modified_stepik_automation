@@ -4,6 +4,9 @@
 /.pytest_cache/
 /env/
 /reports/
+/allure_report/
+/errors/
+/allure_results/
 
 
 ### macOS ###
@@ -63,6 +66,4 @@ $RECYCLE.BIN/
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos
 
-/allure_report/
-/errors/
-/allure_results/
+

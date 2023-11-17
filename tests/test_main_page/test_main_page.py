@@ -15,6 +15,12 @@ def main_page(browser, config):
     return page
 
 
+
+@pytest.mark.login_guest
+def test_guest_should_see_login_link(main_page):
+    main_page.should_be_login_link()
+
+### @pytest.mark.xfail!!!!!!!
 @pytest.mark.login_guest
 def test_guest_can_go_to_login_page(main_page, browser, config):
     with allure.step('Go to login page'):
@@ -22,10 +28,6 @@ def test_guest_can_go_to_login_page(main_page, browser, config):
     login_page = LoginPage(browser, config)  ## config here == browser.current_url
     with allure.step('Check login page'):
         login_page.should_be_login_page()
-
-@pytest.mark.login_guest
-def test_guest_should_see_login_link(main_page):
-    main_page.should_be_login_link()
 
 
 def test_guest_cant_see_product_in_basket_opened_from_main_page(main_page, browser, config):
