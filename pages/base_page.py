@@ -19,7 +19,7 @@ from pages.locators import BasePageLocators
 
 class BasePage:
 
-    def __init__(self, browser, config, timeout=3):     # run browser
+    def __init__(self, browser, config, timeout=10):     # run browser
 
         self.browser = browser
         self.config = config

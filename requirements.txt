@@ -2,4 +2,5 @@ selenium
 pytest
 jsonpickle
 allure-pytest
+pytest-xdist
 #ipython==7.7.0

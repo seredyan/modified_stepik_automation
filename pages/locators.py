@@ -14,8 +14,9 @@ class LoginPageLocators:
     LOGIN_SUBMIT = (By.NAME, "login_submit")
 
     REGISTER_EMAIL = (By.CSS_SELECTOR, "#id_registration-email")
+    REGISTER_PASSWORD = (By.CSS_SELECTOR, "#id_registration-password1")
     REGISTER__CONFIRM_PASSWORD = (By.CSS_SELECTOR, "#id_registration-password2")
-    REGISTRATION_SUBMIT = (By.NAME, "registration_submitsss") ### WRONG SELECTOR. Must be: "registration_submit
+    REGISTRATION_SUBMIT = (By.NAME, "registration_submit") ### WRONG SELECTOR. Must be: "registration_submit
 
 
 class ProductPageLocators:
@@ -31,7 +32,7 @@ class ProductPageLocators:
 
 class BasketPageLocators:
     CHECKOUT_BUTTON = (By.XPATH, '//a[contains(@href, "/checkout/")]')   ## selected by xpath because of multiple languages website
-    EMPTY_BASKET_MESSAGE = (By.CSS_SELECTOR, "#content_inner pAAA")  ## WRONG SELECTOR. Must be: "#content_inner p"
+    EMPTY_BASKET_MESSAGE = (By.CSS_SELECTOR, "#content_inner p")  ## WRONG SELECTOR. Must be: "#content_inner p"
 
 
 class BasePageLocators:

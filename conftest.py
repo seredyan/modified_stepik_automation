@@ -63,7 +63,7 @@ def browser(request):
     return driver
 
 
-### Screenshots on failure hooks without ALLURE ###
+### Screenshots on failure hooks without ALLURE ### Works from running by IDE PyCharm ONLY!!
 screenshot_failure_directory_created = False  # Variable to keep track of directory creation
 timestamp = None  # Variable to keep track of the current timestamp
 @pytest.hookimpl(hookwrapper=True)
@@ -144,7 +144,7 @@ def load_from_json(file):
 
 
 
-### ****** Capture screenshot on failure using ALLURE ****** ###
+### ****** Capture screenshot on failure using ALLURE ****** ### Works from the COMMAND LINE ONLY!!!!!
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item):
     # Get the result of the call to the hook method
@@ -159,7 +159,7 @@ def pytest_runtest_makereport(item):
 
 
 
-#### Variant 2 below needs to be fixed!!!!
+#### Option 2 below needs to be fixed!!!!
 # @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 # def pytest_runtest_makereport(item):
 #     pytest_html = item.config.pluginmanager.getplugin('html')

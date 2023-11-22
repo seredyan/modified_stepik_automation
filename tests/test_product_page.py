@@ -31,19 +31,16 @@ def product_page_promo(browser, config):
     return page
 
 
-
-@pytest.fixture(scope="session")
-def user_and_product(browser, config):
+@pytest.fixture(scope="function")
+def sign_up(product_page, browser, config):
     user = User(email=random_char_email(), password=random_string())
-    page = ProductPage(browser, config)
-    url = page.base_url + config['product']['209']
-    # browser.delete_all_cookies()
-    page.open(url)
     login_page = LoginPage(browser, config)  ## config here == browser.current_url
+    login_page.open(login_page.base_url)
     login_page.register_new_user(user)
     login_page.should_be_authorized_user()
+    page = ProductPage(browser, config)
+    page.open(page.base_url + config['product']['209'])
     return page
-
 
 
 
@@ -62,8 +59,8 @@ def test_guest_can_go_to_login_page_from_product_page(product_page):
 
 
 
-
-def test_guest_cant_see_product_in_basket_opened_from_product_page(browser, product_page, config):
+##pytest mark.xfail (wrong selector in the last step to capture sscreenshot of failure)
+def test_guest_can_not_see_product_in_basket_opened_from_product_page(browser, product_page, config):
     product_page.go_to_basket()
     basket_page = BasketPage(browser, config)  ## config here == browser.current_url
     basket_page.should_not_be_checkout_button()
@@ -76,17 +73,22 @@ def test_guest_can_add_product_to_basket_promo(product_page_promo):
     product_page_promo.add_product_to_basket()
 
 
+#### this test fails to capture screenshot of failure
+def test_to_make_screenshot_of_failure_basket_total_33(product_page):
+    product_page.should_be_success_message_about_basket_total('33')
 
-def test_new_user_can_not_see_success_message(user_and_product, browser, config):
-    user_and_product.should_not_be_success_message()
 
-def test_user_can_add_product_to_basket(user_and_product, browser, config):
-    page = ProductPage(browser, config)  ## config here == browser.current_url
-    page.open(page.base_url+config['product']['209'])
-    time.sleep(7)
-    page.add_product_to_basket()
-    page.should_be_authorized_user()
+#### this test fails to capture screenshot of failure
+def test_to_make_screenshot_of_failure_message_should_be_disappeart(product_page):
+    product_page.add_product_to_basket()
+    product_page.should_not_be_success_message()
 
+def test_new_user_can_not_see_success_message(sign_up, browser, config):
+    sign_up.should_not_be_success_message()
+
+def test_user_can_add_product_to_basket(sign_up, browser, config):
+    sign_up.add_product_to_basket()
+    sign_up.should_be_authorized_user()
 
 
 
@@ -99,6 +101,10 @@ def test_guest_can_not_see_success_message(product_page):
 def test_message_disappeared_after_adding_product_to_basket(product_page):
     product_page.add_product_to_basket()
     product_page.success_message_should_be_disappeart()
+
+
+
+
 
 @pytest.mark.xfail  ## 4_3 step 6
 def test_guest_can_not_see_success_message_after_adding_product_to_basket(browser):
