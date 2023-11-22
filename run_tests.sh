@@ -4,16 +4,19 @@
 
 
 #source env/bin/activate
-pip install -r requirements.txt
+echo "-> Installing dependencies"
+pip install -r requirements.txt --quiet
 
-## removing old allure results
-rm -r allure-results/*
+echo "-> Removing old Allure results"
+rm -r allure-results/* || echo "No results"
 
-## running tests
-pytest -v -s --alluredir=allure-results
+echo "-> Start tests"
+pytest -n auto tests -v -s --alluredir=allure-results
+echo "-> Test finished"
 
-## generating report
+echo "-> Generating report"
 allure generate allure-results --clean -o allure-report
 
 ## opening report
+echo "-> Execute 'allure serve' in the command line"
 allure open allure-report
