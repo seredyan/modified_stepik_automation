@@ -3,6 +3,7 @@
 import pytest
 import random
 import string
+import time
 from pages.product_page import ProductPage
 from pages.basket_page import BasketPage
 from pages.login_page import LoginPage
@@ -36,7 +37,7 @@ def user_and_product(browser, config):
     user = User(email=random_char_email(), password=random_string())
     page = ProductPage(browser, config)
     url = page.base_url + config['product']['209']
-    browser.delete_all_cookies()
+    # browser.delete_all_cookies()
     page.open(url)
     login_page = LoginPage(browser, config)  ## config here == browser.current_url
     login_page.register_new_user(user)
@@ -82,6 +83,7 @@ def test_new_user_can_not_see_success_message(user_and_product, browser, config)
 def test_user_can_add_product_to_basket(user_and_product, browser, config):
     page = ProductPage(browser, config)  ## config here == browser.current_url
     page.open(page.base_url+config['product']['209'])
+    time.sleep(7)
     page.add_product_to_basket()
     page.should_be_authorized_user()
 
