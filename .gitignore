@@ -11,6 +11,8 @@
 /allure_results/
 /allure_result/
 /allure_reports/
+browserstack.yml
+
 
 ### macOS ###
 # General
