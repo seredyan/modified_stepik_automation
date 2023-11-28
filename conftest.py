@@ -44,11 +44,17 @@ def browser(request):
     if browser_param == "chrome":
         options = Options()
         options.add_experimental_option('prefs', {'intl.accept_languages': user_language})
-        if headless: options.headless = True
+        if headless:             ## headless mode works by running testsfrom COMMAND LINE ONLY!!!!! (not from IDE)
+            options.add_argument('--headless')
+            options.add_argument('--disable-gpu')
+        # options.add_argument('-headless')  ## headless mode works by default by running from IDE PyCharm
         driver = webdriver.Chrome(options=options)
     elif browser_param == "firefox":
         options = webdriver.FirefoxOptions()
-        if headless: options.headless = True
+        # options.add_argument('--headless')  ## headless mode works by default by running from IDE PyCharm
+        if headless:                            ## headless mode works by running testsfrom COMMAND LINE ONLY!!!!!
+            options.add_argument('--headless')
+            options.add_argument('--disable-gpu')
         driver = webdriver.Firefox(options=options)
     elif browser_param == "safari":
         driver = webdriver.Safari()

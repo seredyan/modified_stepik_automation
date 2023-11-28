@@ -57,9 +57,6 @@ def test_guest_should_see_login_link_on_product_page(product_page):
 def test_guest_can_go_to_login_page_from_product_page(product_page):
     product_page.go_to_login_page()
 
-
-
-##pytest mark.xfail (wrong selector in the last step to capture sscreenshot of failure)
 def test_guest_can_not_see_product_in_basket_opened_from_product_page(browser, product_page, config):
     product_page.go_to_basket()
     basket_page = BasketPage(browser, config)  ## config here == browser.current_url
