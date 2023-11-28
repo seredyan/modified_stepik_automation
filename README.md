@@ -27,10 +27,10 @@ Set BrowserStack credentials
 Saving your BrowserStack credentials as environment variables makes it simple to run your test suite 
 from your local or CI environment.
    --> in your IDE being in env run commands: 
-setx BROWSERSTACK_USERNAME "sergeys_52aBgT" 
-setx BROWSERSTACK_ACCESS_KEY "eQVypf3tevm2pxxqWDnH" 
-set BROWSERSTACK_USERNAME=sergeys_52aBgT
-set BROWSERSTACK_ACCESS_KEY=eQVypf3tevm2pxxqWDnH
+setx BROWSERSTACK_USERNAME "xxx" 
+setx BROWSERSTACK_ACCESS_KEY "xxxx" 
+set BROWSERSTACK_USERNAME=xxxx
+set BROWSERSTACK_ACCESS_KEY=xxxx
 
 **Step 2:**
 Install BrowserStack Python SDK
