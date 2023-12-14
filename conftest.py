@@ -51,7 +51,7 @@ def browser(request):
         driver = webdriver.Chrome(options=options)
     elif browser_param == "firefox":
         options = webdriver.FirefoxOptions()
-        # options.add_argument('--headless')  ## headless mode works by default by running from IDE PyCharm
+        options.add_argument('--headless')  ## headless mode works by default by running from IDE PyCharm
         if headless:                            ## headless mode works by running testsfrom COMMAND LINE ONLY!!!!!
             options.add_argument('--headless')
             options.add_argument('--disable-gpu')
@@ -100,9 +100,12 @@ def pytest_exception_interact(node, call, report):
         test_path_parts = node.nodeid.split("tests/")
         if len(test_path_parts) > 1:
             # test_path = test_path_parts[-1].strip("/")
-            test_path = test_path_parts[1].replace("/", ":::")
+            test_path = test_path_parts[1].replace("/", "::")
         else:
             test_path = "unknown_path"
+
+        # Replace :: with _ for Windows compatibility
+        test_path = test_path.replace("::", "_")
 
         try:
             ## Capture the whole browser window
@@ -110,7 +113,7 @@ def pytest_exception_interact(node, call, report):
             screenshot_path = _path / f"{test_path}.png"
             with open(screenshot_path, "wb") as f:
                 f.write(screenshot)
-            # print(f"Screenshot of test failure saved successfully. Path: {screenshot_path}")
+            print(f"Screenshot of test failure saved successfully. Path: {screenshot_path}")
         except Exception as e:
             print(f"Failed to save screenshot of test failure. Error: {e}")
     else:

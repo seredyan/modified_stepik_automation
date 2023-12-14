@@ -13,7 +13,7 @@ class LoginPageLocators:
     LOGIN_PASSWORD = (By.CSS_SELECTOR, "#id_login-password")
     LOGIN_SUBMIT = (By.NAME, "login_submit")
 
-    REGISTER_EMAIL = (By.CSS_SELECTOR, "#id_registration-email")
+    REGISTER_EMAIL = (By.CSS_SELECTOR, "#id_registration-emailsss")
     REGISTER_PASSWORD = (By.CSS_SELECTOR, "#id_registration-password1")
     REGISTER__CONFIRM_PASSWORD = (By.CSS_SELECTOR, "#id_registration-password2")
     REGISTRATION_SUBMIT = (By.NAME, "registration_submit") ### WRONG SELECTOR. Must be: "registration_submit
