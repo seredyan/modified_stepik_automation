@@ -16,7 +16,7 @@ allure generate ./allure-results --clean -o ./allure-report
 
 
 
-# **Using BROWSERSTACK: (for Windows ONLY) Not for Mac OS since it is required to install openssl etc!!!!**
+# **Using BROWSERSTACK: (for Windows ONLY) Not for MacOS since it is required to install openssl etc!!!!**
  
 ## Integration Steps
 
