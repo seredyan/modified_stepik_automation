@@ -8,7 +8,7 @@ from .base_page import BasePage
 class BasketPage(BasePage):
 
     def checkot_item(self):
-        self.browser.find_element(*BasketPageLocators.CHECKOUT_BUTTON).click()
+        self.wd.find_element(*BasketPageLocators.CHECKOUT_BUTTON).click()
 
 
     def should_be_checkout_button(self):

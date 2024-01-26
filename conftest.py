@@ -51,7 +51,7 @@ def browser(request):
         driver = webdriver.Chrome(options=options)
     elif browser_param == "firefox":
         options = webdriver.FirefoxOptions()
-        # options.add_argument('--headless')  ## headless mode works by default by running from IDE PyCharm
+        options.add_argument('--headless')  ## headless mode works by default by running from IDE PyCharm
         if headless:                            ## headless mode works by running testsfrom COMMAND LINE ONLY!!!!!
             options.add_argument('-headless')
             options.add_argument('-disable-gpu')

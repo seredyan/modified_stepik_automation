@@ -19,34 +19,34 @@ from pages.locators import BasePageLocators
 
 class BasePage:
 
-    def __init__(self, browser, config, timeout=10):     # run browser
+    def __init__(self, wd, config, timeout=10):     # run browser
 
-        self.browser = browser
+        self.wd = wd
         self.config = config
         self.base_url = config['web']['baseUrl']
-        browser.implicitly_wait(timeout)
+        wd.implicitly_wait(timeout)
+
 
     @allure.step("Go to basket")
     def go_to_basket(self):
-        self.browser.find_element(*BasePageLocators.VIEW_BASKET).click()
+        self.wd.find_element(*BasePageLocators.VIEW_BASKET).click()
 
 
     @allure.step("Go to login page")
     def go_to_login_page(self):
-        self.browser.find_element(*BasePageLocators.LOGIN_LINK).click()
+        self.wd.find_element(*BasePageLocators.LOGIN_LINK).click()
 
 
 
     @allure.step("Go to main page")
     def open(self, url):
-        wd = self.browser
-        wd.get(url)
+        self.wd.get(url)
 
 
     @allure.step('Is element - {what} present')
     def is_element_present(self, how, what):
         try:
-            self.browser.find_element(how, what)
+            self.wd.find_element(how, what)
         except (NoSuchElementException):
             return False
         return True
@@ -56,7 +56,7 @@ class BasePage:
 
     def is_not_element_present(self, how, what, timeout=3):
         try:
-            WebDriverWait(self.browser, timeout).until(EC.presence_of_element_located((how, what)))
+            WebDriverWait(self.wd, timeout).until(EC.presence_of_element_located((how, what)))
         except TimeoutException:
             return True
 
@@ -65,7 +65,7 @@ class BasePage:
 
     def is_disappeared(self, how, what, timeout=5):
         try:
-            WebDriverWait(self.browser, timeout, 1, TimeoutException). \
+            WebDriverWait(self.wd, timeout, 1, TimeoutException). \
                 until_not(EC.presence_of_element_located((how, what)))
         except TimeoutException:
             return False
@@ -88,7 +88,7 @@ class BasePage:
 
     def solve_quiz_and_get_code(self):  ## code for quiz on learning's web sites
         # for firefox! was time.sleep added!!!!!!
-        alert = self.browser.switch_to.alert
+        alert = self.wd.switch_to.alert
         time.sleep(0.2)
         x = alert.text.split(" ")[2]
         answer = str(math.log(abs((12 * math.sin(float(x))))))
@@ -97,7 +97,7 @@ class BasePage:
         alert.accept()
         time.sleep(0.2)
         try:
-            alert = self.browser.switch_to.alert
+            alert = self.wd.switch_to.alert
             alert_text = alert.text
             print(f"Your code: {alert_text}")
             alert.accept()
@@ -110,7 +110,7 @@ class BasePage:
 
     def is_valid(self):
         try:
-            self.browser.current_url
+            self.wd.current_url
             return True
         except:
             return False
@@ -118,4 +118,4 @@ class BasePage:
 
 
     def destroy(self):
-        self.browser.quit()
+        self.wd.quit()
